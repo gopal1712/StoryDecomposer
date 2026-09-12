@@ -1,0 +1,16 @@
+Generate clarifying questions for story refinement meeting.
+
+Acceptance Criteria:
+{acceptanceCriteria}
+
+Identified Tasks:
+{tasks}
+
+Focus areas:
+- Acceptance criteria clarity (2 questions)
+- Technical feasibility (1-2 questions)
+- Dependencies & risks (1 question)
+- Performance & security (1 question)
+- Story-point estimation confidence using standard Fibonacci points (1 question)
+
+Format: {"questions": ["q1", "q2", ...]}

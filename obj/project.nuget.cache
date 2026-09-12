@@ -1,0 +1,61 @@
+{
+  "version": 2,
+  "dgSpecHash": "8Y3HtcuZG7c=",
+  "success": true,
+  "projectFilePath": "D:\\MyProgs\\C#\\StoryDecomposer\\StoryDecomposer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\azure.ai.openai\\2.9.0-beta.1\\azure.ai.openai.2.9.0-beta.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\azure.core\\1.51.1\\azure.core.1.51.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\csharptojsonschema\\3.10.1\\csharptojsonschema.3.10.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\google_gemini\\0.10.1\\google_gemini.0.10.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\langchain\\0.17.1\\langchain.0.17.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\langchain.core\\0.17.1\\langchain.core.0.17.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\langchain.databases.abstractions\\0.17.1-dev.46\\langchain.databases.abstractions.0.17.1-dev.46.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\langchain.documentloaders.abstractions\\0.17.1\\langchain.documentloaders.abstractions.0.17.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\langchain.extensions.dependencyinjection\\0.17.1\\langchain.extensions.dependencyinjection.0.17.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\langchain.polyfills\\0.17.1\\langchain.polyfills.0.17.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\langchain.splitters.abstractions\\0.17.1\\langchain.splitters.abstractions.0.17.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.6\\microsoft.aspnetcore.openapi.10.0.6.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\10.0.2\\microsoft.bcl.asyncinterfaces.10.0.2.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.1\\microsoft.bcl.hashcode.1.1.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.extensions.ai\\10.5.0\\microsoft.extensions.ai.10.5.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.extensions.ai.abstractions\\10.5.2\\microsoft.extensions.ai.abstractions.10.5.2.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.extensions.ai.openai\\10.5.0\\microsoft.extensions.ai.openai.10.5.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.extensions.vectordata.abstractions\\10.5.2\\microsoft.extensions.vectordata.abstractions.10.5.2.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.net.illink.tasks\\9.0.9\\microsoft.net.illink.tasks.9.0.9.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.semantickernel\\1.80.1\\microsoft.semantickernel.1.80.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.semantickernel.abstractions\\1.80.1\\microsoft.semantickernel.abstractions.1.80.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.semantickernel.connectors.azureopenai\\1.80.1\\microsoft.semantickernel.connectors.azureopenai.1.80.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.semantickernel.connectors.inmemory\\1.74.0-preview\\microsoft.semantickernel.connectors.inmemory.1.74.0-preview.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.semantickernel.connectors.openai\\1.80.1\\microsoft.semantickernel.connectors.openai.1.80.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\microsoft.semantickernel.core\\1.80.1\\microsoft.semantickernel.core.1.80.1.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\ollama\\1.15.0\\ollama.1.15.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\openai\\2.10.0\\openai.2.10.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\system.clientmodel\\1.10.0\\system.clientmodel.1.10.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\system.memory.data\\10.0.6\\system.memory.data.10.0.6.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\system.numerics.tensors\\10.0.10\\system.numerics.tensors.10.0.10.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\tiktoken\\2.2.0\\tiktoken.2.2.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\tiktoken.core\\2.2.0\\tiktoken.core.2.2.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\tiktoken.encodings.abstractions\\2.2.0\\tiktoken.encodings.abstractions.2.2.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\tiktoken.encodings.cl100k\\2.2.0\\tiktoken.encodings.cl100k.2.2.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\tiktoken.encodings.o200k\\2.2.0\\tiktoken.encodings.o200k.2.2.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\tryagi.anthropic\\3.8.0\\tryagi.anthropic.3.8.0.nupkg.sha512",
+    "C:\\Users\\Gopalakrishnan\\.nuget\\packages\\tryagi.openai\\4.2.0\\tryagi.openai.4.2.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "D:\\MyProgs\\C#\\StoryDecomposer\\StoryDecomposer.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\MyProgs\\C#\\StoryDecomposer\\StoryDecomposer.csproj",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}
