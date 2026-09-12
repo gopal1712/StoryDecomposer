@@ -15,7 +15,7 @@ public class GroqService : ILLMService
         _httpClient = httpClient;
         _logger = logger;
         _configuration = config;
-        _apiKey = config["Groq:ApiKey"] ?? "your-api-key";
+        _apiKey = config["Groq:ApiKey"] ?? throw new InvalidOperationException("Groq:ApiKey is required when Groq is selected.");
     }
 
     public async Task<string> Generate(string prompt, string context = "")
@@ -26,17 +26,19 @@ public class GroqService : ILLMService
         {
             var request = new
             {
-                model = _configuration["Groq:Model"] ?? "llama-3.1-8b-instant",
+                model = _configuration["Groq:Model"],
                 messages = new[]
                 {
                     new { role = "user", content = $"Context:\n{context}\n\nTask:\n{prompt}\n\nResponse:" }
                 },
-                temperature = 0.2,
-                max_tokens = _configuration.GetValue("Groq:MaxTokens", 1024)
+                temperature = _configuration.GetValue<double>("Groq:Temperature"),
+                max_tokens = _configuration.GetValue<int>("Groq:MaxTokens")
             };
 
-            var baseUrl = (_configuration["Groq:BaseUrl"] ?? "https://api.groq.com/openai/v1").TrimEnd('/');
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/chat/completions")
+            var baseUrl = _configuration["Groq:BaseUrl"]!.TrimEnd('/');
+            var httpRequest = new HttpRequestMessage(
+                HttpMethod.Post,
+                $"{baseUrl}{_configuration["Groq:ChatCompletionsPath"]}")
             {
                 Content = new StringContent(
                     JsonConvert.SerializeObject(request),

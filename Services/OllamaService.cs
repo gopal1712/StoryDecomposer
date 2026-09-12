@@ -27,26 +27,25 @@ Response:";
         
         var request = new
         {
-            model = _configuration["Ollama:Model"] ?? "tinyllama",
+            model = _configuration["Ollama:Model"],
             prompt = fullPrompt,
-            stream = false,
-            format = "json",
-            temperature = 0.2,
-            top_p = 0.9,
-            keep_alive = _configuration["Ollama:KeepAlive"] ?? "10m",
+            stream = _configuration.GetValue<bool>("Ollama:Stream"),
+            format = _configuration["Ollama:Format"],
+            temperature = _configuration.GetValue<double>("Ollama:Temperature"),
+            top_p = _configuration.GetValue<double>("Ollama:TopP"),
+            keep_alive = _configuration["Ollama:KeepAlive"],
             options = new
             {
-                num_predict = _configuration.GetValue("Ollama:NumPredict", 384)
-            },
-                top_k = 40,
-                repeat_penalty = 1.1,
-                num_predict = 800,      // Phi is efficient, can handle larger outputs
-                num_ctx = 2048,         // Phi supports 2K context
-                num_gpu = -1            // Use GPU if available, else CPU
+                num_predict = _configuration.GetValue<int>("Ollama:NumPredict"),
+                top_k = _configuration.GetValue<int>("Ollama:TopK"),
+                repeat_penalty = _configuration.GetValue<double>("Ollama:RepeatPenalty"),
+                num_ctx = _configuration.GetValue<int>("Ollama:NumContext"),
+                num_gpu = _configuration.GetValue<int>("Ollama:NumGpu")
+            }
         };
         
         var response = await _httpClient.PostAsJsonAsync(
-            $"{_configuration["Ollama:BaseUrl"] ?? "http://localhost:11434"}/api/generate", 
+            $"{_configuration["Ollama:BaseUrl"]}{_configuration["Ollama:GeneratePath"]}",
             request);
         
         response.EnsureSuccessStatusCode();

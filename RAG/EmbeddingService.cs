@@ -18,12 +18,12 @@ public sealed class EmbeddingService
     {
         var requestBody = new
         {
-            model = _configuration["Ollama:EmbeddingModel"] ?? "phi3.5",
+            model = _configuration["Ollama:EmbeddingModel"],
             input = text
         };
 
         var response = await _httpClient.PostAsJsonAsync(
-            $"{_configuration["Ollama:BaseUrl"] ?? "http://localhost:11434"}/api/embeddings", requestBody);
+            $"{_configuration["Ollama:BaseUrl"]}{_configuration["Ollama:EmbeddingPath"]}", requestBody);
         response.EnsureSuccessStatusCode();
 
         var responseData = await response.Content.ReadFromJsonAsync<EmbeddingResponse>();

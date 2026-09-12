@@ -4,15 +4,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHttpClient<StoryDecomposer.Services.OllamaService>(client =>
 {
-    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue("Ollama:TimeoutSeconds", 30));
+    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("Ollama:TimeoutSeconds"));
 });
 builder.Services.AddHttpClient<StoryDecomposer.RAG.EmbeddingService>(client =>
 {
-    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue("Ollama:TimeoutSeconds", 30));
+    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("Ollama:TimeoutSeconds"));
 });
 builder.Services.AddHttpClient<StoryDecomposer.Services.GroqService>(client =>
 {
-    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue("Groq:TimeoutSeconds", 30));
+    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("Groq:TimeoutSeconds"));
 });
 builder.Services.AddScoped<StoryDecomposer.Services.ILLMService>(services =>
     builder.Configuration.GetValue<string>("LLM:Provider")?.Equals("Groq", StringComparison.OrdinalIgnoreCase) == true

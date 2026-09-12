@@ -46,8 +46,20 @@ Configuration is read from `appsettings.json` and environment-specific configura
   },
   "Ollama": {
     "BaseUrl": "http://localhost:11434",
+    "GeneratePath": "/api/generate",
+    "EmbeddingPath": "/api/embeddings",
     "Model": "tinyllama",
     "EmbeddingModel": "phi3.5",
+    "KeepAlive": "10m",
+    "Stream": false,
+    "Format": "json",
+    "Temperature": 0.2,
+    "TopP": 0.9,
+    "TopK": 40,
+    "RepeatPenalty": 1.1,
+    "NumPredict": 384,
+    "NumContext": 2048,
+    "NumGpu": -1,
     "TimeoutSeconds": 30
   }
 }
@@ -72,7 +84,9 @@ Set the provider to `Groq` and provide the API key through an environment variab
   },
   "Groq": {
     "BaseUrl": "https://api.groq.com/openai/v1",
+    "ChatCompletionsPath": "/chat/completions",
     "Model": "openai/gpt-oss-20b",
+    "Temperature": 0.2,
     "MaxTokens": 1024,
     "TimeoutSeconds": 30
   }
