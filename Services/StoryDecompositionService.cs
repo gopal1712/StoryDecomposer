@@ -5,7 +5,7 @@ namespace StoryDecomposer.Services;
 
 public class StoryDecompositionService
 {
-    private const string PromptFileName = "task-decomposition-prompt.txt";
+    private const string PromptFileName = "story-analysis-prompt.txt";
     private readonly ILLMService _llmService;
     private readonly RAGService _ragService;
     
@@ -20,7 +20,7 @@ public class StoryDecompositionService
         // Get context from similar acceptance criteria in RAG
         var context = await _ragService.GetContext(story.AcceptanceCriteria);
         
-        var prompt = await LoadPrompt(PromptFileName, story.AcceptanceCriteria);
+        var prompt = await LoadPrompt(PromptFileName, story.AcceptanceCriteria, context);
         
         var response = await _llmService.Generate(prompt, context);
         
@@ -33,9 +33,18 @@ public class StoryDecompositionService
         return new DecompositionResult
         {
             Tasks = tasks,
+            Questions = ConvertToQuestions(result["questions"]),
             Reasoning = ConvertToReasoning(result["reasoning"]),
             EstimatedStoryPoints = ParseEstimate(result["estimatedStoryPoints"])
         };
+    }
+
+    private static List<string> ConvertToQuestions(JToken? questionsToken)
+    {
+        return (questionsToken as JArray ?? [])
+            .Values<string>()
+            .Where(question => !string.IsNullOrWhiteSpace(question))
+            .ToList()!;
     }
 
     private static int ParseEstimate(JToken? estimateToken)
@@ -53,7 +62,9 @@ public class StoryDecompositionService
         if (reasoningToken is JObject reasoningObject)
         {
             return reasoningObject.Properties()
-                .Select(property => property.Value.Value<string>())
+                .Select(property => property.Value.Type == JTokenType.String
+                    ? property.Value.Value<string>()
+                    : property.Value.ToString(Newtonsoft.Json.Formatting.None))
                 .Where(value => !string.IsNullOrWhiteSpace(value))
                 .ToList()!;
         }
@@ -71,11 +82,14 @@ public class StoryDecompositionService
 
     private static async System.Threading.Tasks.Task<string> LoadPrompt(
         string fileName,
-        string acceptanceCriteria)
+        string acceptanceCriteria,
+        string context)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "prompts", fileName);
         var template = await File.ReadAllTextAsync(path);
-        return template.Replace("{acceptanceCriteria}", acceptanceCriteria);
+        return template
+            .Replace("{acceptanceCriteria}", acceptanceCriteria)
+            .Replace("{context}", context);
     }
     
     private List<StoryDecomposer.Models.Task> ConvertToTasks(JToken? tasksArray)

@@ -15,6 +15,11 @@ public class RAGService
     
     public async System.Threading.Tasks.Task<string> GetContext(string query)
     {
+        if (!_vectorStore.HasDocuments)
+        {
+            return string.Empty;
+        }
+
         // Get embedding for query
         var queryEmbedding = await _embeddingService.GetEmbeddingAsync(query);
         

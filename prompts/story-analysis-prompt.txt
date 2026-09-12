@@ -1,0 +1,36 @@
+Analyze the acceptance criteria and return both an implementation breakdown and story-refinement questions.
+
+Acceptance Criteria:
+{acceptanceCriteria}
+
+Relevant context:
+{context}
+
+Rules:
+- Break into 3-7 tasks maximum.
+- Each task should be completable in 1-3 days.
+- Categorize each task as Database, API, UI, Auth, DevOps, or Testing.
+- Include technical considerations and clear acceptance criteria for each task.
+- Estimate the complete story using exactly one Fibonacci value: 1, 2, 3, 5, or 8.
+- Ask concise questions covering acceptance criteria clarity, technical feasibility, dependencies and risks, performance and security, and estimation confidence.
+- Return only valid JSON. Do not use markdown fences.
+
+Return exactly this structure:
+{
+  "tasks": [
+    {
+      "title": "Task title",
+      "description": "Detailed description",
+      "areaOfChange": "UI|API|Database|Auth|DevOps|Testing",
+      "acceptanceCriteria": ["Specific acceptance criterion"]
+    }
+  ],
+  "reasoning": {
+    "acceptanceCriteriaMapping": "How each acceptance criterion maps to tasks.",
+    "breakdownStrategy": "Why this breakdown and task sequence.",
+    "technicalConsiderations": "Key technical risks and decisions.",
+    "estimationJustification": "Why this Fibonacci estimate was chosen."
+  },
+  "estimatedStoryPoints": 3,
+  "questions": ["Question 1", "Question 2"]
+}

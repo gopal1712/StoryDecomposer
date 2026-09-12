@@ -4,14 +4,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHttpClient<StoryDecomposer.Services.OllamaService>(client =>
 {
-    client.Timeout = TimeSpan.FromMinutes(5);
+    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue("Ollama:TimeoutSeconds", 30));
 });
 builder.Services.AddHttpClient<StoryDecomposer.RAG.EmbeddingService>(client =>
 {
-    client.Timeout = TimeSpan.FromMinutes(5);
+    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue("Ollama:TimeoutSeconds", 30));
+});
+builder.Services.AddHttpClient<StoryDecomposer.Services.GroqService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue("Groq:TimeoutSeconds", 30));
 });
 builder.Services.AddScoped<StoryDecomposer.Services.ILLMService>(services =>
-    services.GetRequiredService<StoryDecomposer.Services.OllamaService>());
+    builder.Configuration.GetValue<string>("LLM:Provider")?.Equals("Groq", StringComparison.OrdinalIgnoreCase) == true
+        ? services.GetRequiredService<StoryDecomposer.Services.GroqService>()
+        : services.GetRequiredService<StoryDecomposer.Services.OllamaService>());
 builder.Services.AddSingleton<StoryDecomposer.RAG.VectorStore>();
 builder.Services.AddSingleton<StoryDecomposer.Services.RAGService>();
 builder.Services.AddScoped<StoryDecomposer.Services.StoryDecompositionService>();

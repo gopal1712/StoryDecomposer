@@ -2,7 +2,19 @@ namespace StoryDecomposer.RAG;
 
 public sealed class VectorStore
 {
-      private List<VectorDocument> _documents = new();
+    private readonly object _sync = new();
+    private readonly List<VectorDocument> _documents = new();
+
+    public bool HasDocuments
+    {
+        get
+        {
+            lock (_sync)
+            {
+                return _documents.Count > 0;
+            }
+        }
+    }
     
     public class VectorDocument
     {
@@ -13,21 +25,27 @@ public sealed class VectorStore
     
     public void AddDocument(string id, string content, float[] embedding)
     {
-        _documents.Add(new VectorDocument 
+        lock (_sync)
         { 
-            Id = id, 
-            Content = content, 
-            Embedding = embedding 
-        });
+            _documents.Add(new VectorDocument
+            {
+                Id = id,
+                Content = content,
+                Embedding = embedding
+            });
+        }
     }
     
     // Cosine similarity search
     public List<VectorDocument> Search(float[] queryEmbedding, int topK = 3)
     {
-        return _documents
-            .OrderByDescending(doc => CosineSimilarity(queryEmbedding, doc.Embedding))
-            .Take(topK)
-            .ToList();
+        lock (_sync)
+        {
+            return _documents
+                .OrderByDescending(doc => CosineSimilarity(queryEmbedding, doc.Embedding))
+                .Take(topK)
+                .ToList();
+        }
     }
     
     private float CosineSimilarity(float[] a, float[] b)
