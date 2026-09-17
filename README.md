@@ -10,8 +10,8 @@ The API accepts only `acceptanceCriteria`. Story title and description are not r
 - Categorizes tasks by area such as UI, API, Database, Auth, DevOps, and Testing.
 - Generates clarification questions for planning and refinement.
 - Returns structured reasoning for the task breakdown.
-- Estimates the complete story with one Fibonacci value: `1`, `2`, `3`, `5`, or `8`.
-- Loads prompts from the `prompts` directory.
+- Estimates the complete story using `5`, `8`, `13`, `21`, or `34` story points.
+- Loads one combined analysis prompt from the `prompts` directory.
 - Uses an in-memory vector store for related context.
 - Supports Ollama or Groq for text generation.
 
@@ -31,7 +31,7 @@ Ollama is currently required for embeddings, even when Groq is selected for text
 - .NET SDK 10.0 or later
 - Ollama running locally for embeddings
 - Ollama embedding model `phi3.5`
-- Either Ollama generation model `tinyllama` or a Groq API account
+- Either Ollama generation model `phi3.5` or a Groq API account
 
 ## Configuration
 
@@ -48,7 +48,7 @@ Configuration is read from `appsettings.json` and environment-specific configura
     "BaseUrl": "http://localhost:11434",
     "GeneratePath": "/api/generate",
     "EmbeddingPath": "/api/embeddings",
-    "Model": "tinyllama",
+    "Model": "phi3.5",
     "EmbeddingModel": "phi3.5",
     "KeepAlive": "10m",
     "Stream": false,
@@ -57,10 +57,10 @@ Configuration is read from `appsettings.json` and environment-specific configura
     "TopP": 0.9,
     "TopK": 40,
     "RepeatPenalty": 1.1,
-    "NumPredict": 384,
-    "NumContext": 2048,
+    "NumPredict": 2048,
+    "NumContext": 4096,
     "NumGpu": -1,
-    "TimeoutSeconds": 30
+    "TimeoutSeconds": 300
   }
 }
 ```
@@ -69,7 +69,6 @@ Start Ollama and download the required models:
 
 ```bash
 ollama serve
-ollama pull tinyllama
 ollama pull phi3.5
 ```
 
@@ -189,7 +188,7 @@ Example response:
     "The acceptance criteria were mapped to UI and API work.",
     "Error handling and testing risks influenced the estimate."
   ],
-  "estimatedStoryPoints": 5
+  "estimatedTotalStoryPoints": 13
 }
 ```
 
@@ -203,21 +202,19 @@ Example response:
 | `tasks[].areaOfChange` | string | Technical area affected by the task. |
 | `questions` | array | Clarifying questions for story refinement. |
 | `reasoning` | array | Explanation of the task breakdown and estimate. |
-| `estimatedStoryPoints` | integer | One common Fibonacci estimate for the complete story. |
+| `estimatedTotalStoryPoints` | integer | One common estimate for the complete story. |
 
 ## Prompt Files
 
 Prompt templates are stored in:
 
 ```text
-prompts/task-decomposition-prompt.txt
-prompts/questions-generation-prompt.txt
+prompts/story-analysis-prompt.txt
 ```
 
-They are copied to the application output directory during build. Runtime placeholders include:
+The file is copied to the application output directory during build. The runtime placeholder is:
 
 - `{acceptanceCriteria}`
-- `{tasks}` in the questions prompt
 
 Rebuild or restart the application after changing prompt files.
 
@@ -227,7 +224,7 @@ Rebuild or restart the application after changing prompt files.
 
 - Ollama at `http://localhost:11434` for embeddings.
 - Ollama model `phi3.5` for embeddings.
-- Ollama generation model `tinyllama`, when `LLM:Provider` is `ollama`.
+- Ollama generation model `phi3.5`, when `LLM:Provider` is `ollama`.
 - Groq API access, when `LLM:Provider` is `Groq`.
 - Groq model configured by `Groq:Model`, currently `openai/gpt-oss-20b`.
 
@@ -256,9 +253,10 @@ Program.cs         Dependency injection and application startup
 - The vector store is in-memory and loses its data when the application stops.
 - There is no public endpoint for indexing documents into the vector store.
 - Ollama is still required for embeddings when Groq is used for generation.
-- The default HTTP timeout is 30 seconds; local model generation may require a larger value for slower machines.
+- The default Ollama HTTP timeout is 300 seconds because local model generation may take several minutes. Adjust `Ollama:TimeoutSeconds` for your machine.
 - The API does not process real payments; payment-related output is planning guidance only.
 - The API does not currently validate that `acceptanceCriteria` is non-empty.
+- The API rejects incomplete or placeholder LLM analysis instead of returning an empty successful response.
 
 ## Build
 

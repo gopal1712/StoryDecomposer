@@ -16,14 +16,7 @@ public sealed class OllamaService : ILLMService
     
     public async Task<string> Generate(string prompt, string context = "")
     {
-        var fullPrompt = $@"
-Context:
-{context}
-
-Task:
-{prompt}
-
-Response:";
+        var fullPrompt = prompt;
         
         var request = new
         {
@@ -40,8 +33,8 @@ Response:";
                 top_k = _configuration.GetValue<int>("Ollama:TopK"),
                 repeat_penalty = _configuration.GetValue<double>("Ollama:RepeatPenalty"),
                 num_ctx = _configuration.GetValue<int>("Ollama:NumContext"),
-                num_gpu = _configuration.GetValue<int>("Ollama:NumGpu")
-            }
+                num_gpu = _configuration.GetValue<int>("Ollama:NumGpu"),
+                think = _configuration.GetValue<bool>("Ollama:Think")            }
         };
         
         var response = await _httpClient.PostAsJsonAsync(

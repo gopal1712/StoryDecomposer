@@ -4,15 +4,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHttpClient<StoryDecomposer.Services.OllamaService>(client =>
 {
-    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("Ollama:TimeoutSeconds"));
+    client.Timeout = TimeSpan.FromSeconds(
+        Math.Max(1, builder.Configuration.GetValue<int>("Ollama:TimeoutSeconds", 300)));
 });
 builder.Services.AddHttpClient<StoryDecomposer.RAG.EmbeddingService>(client =>
 {
-    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("Ollama:TimeoutSeconds"));
+    client.Timeout = TimeSpan.FromSeconds(
+        Math.Max(1, builder.Configuration.GetValue<int>("Ollama:TimeoutSeconds", 300)));
 });
 builder.Services.AddHttpClient<StoryDecomposer.Services.GroqService>(client =>
 {
-    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("Groq:TimeoutSeconds"));
+    client.Timeout = TimeSpan.FromSeconds(
+        Math.Max(1, builder.Configuration.GetValue<int>("Groq:TimeoutSeconds", 30)));
 });
 builder.Services.AddScoped<StoryDecomposer.Services.ILLMService>(services =>
     builder.Configuration.GetValue<string>("LLM:Provider")?.Equals("Groq", StringComparison.OrdinalIgnoreCase) == true
@@ -21,7 +24,6 @@ builder.Services.AddScoped<StoryDecomposer.Services.ILLMService>(services =>
 builder.Services.AddSingleton<StoryDecomposer.RAG.VectorStore>();
 builder.Services.AddSingleton<StoryDecomposer.Services.RAGService>();
 builder.Services.AddScoped<StoryDecomposer.Services.StoryDecompositionService>();
-builder.Services.AddScoped<StoryDecomposer.Services.PlanningQuestionsService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

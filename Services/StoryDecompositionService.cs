@@ -29,22 +29,72 @@ public class StoryDecompositionService
         
         // Convert to DecompositionResult
         var tasks = ConvertToTasks(result["tasks"]);
+        var questions = ConvertToQuestions(result["questions"]);
+        var reasoning = ConvertToReasoning(result["reasoning"]);
+        var estimate = ParseEstimate(result["estimatedTotalStoryPoints"]);
+
+       // ValidateAnalysis(tasks, questions, reasoning, estimate);
 
         return new DecompositionResult
         {
             Tasks = tasks,
-            Questions = ConvertToQuestions(result["questions"]),
-            Reasoning = ConvertToReasoning(result["reasoning"]),
-            EstimatedStoryPoints = ParseEstimate(result["estimatedStoryPoints"])
+            Questions = questions,
+            Reasoning = reasoning,
+            EstimatedTotalStoryPoints = estimate
         };
+    }
+
+    private static void ValidateAnalysis(
+        List<StoryDecomposer.Models.Task> tasks,
+        List<string> questions,
+        List<string> reasoning,
+        int estimate)
+    {
+        if (tasks.Count is < 4 or > 7 || tasks.Any(task =>
+                string.IsNullOrWhiteSpace(task.Title) ||
+                string.IsNullOrWhiteSpace(task.Description) ||
+                task.Title.Contains("Task name", StringComparison.OrdinalIgnoreCase) ||
+                task.Description.Contains("Detailed description", StringComparison.OrdinalIgnoreCase) ||
+                task.AreaOfChange.Contains('|') ||
+                task.AreaOfChange.Contains(',') ||
+                task.AreaOfChange.Contains(" or ", StringComparison.OrdinalIgnoreCase)))
+        {
+            throw new InvalidOperationException("The LLM returned an invalid task breakdown.");
+        }
+
+        if (questions.Count is < 5 or > 7 ||
+            questions.Any(question => question.Contains("Question 1", StringComparison.OrdinalIgnoreCase)) ||
+            reasoning.Count == 0 ||
+            reasoning.Any(item => item.Contains("reasoning1", StringComparison.OrdinalIgnoreCase)) ||
+            estimate is not (1 or 3 or 5 or 8 or 13 ))
+        {
+            throw new InvalidOperationException("The LLM returned an incomplete story analysis.");
+        }
     }
 
     private static List<string> ConvertToQuestions(JToken? questionsToken)
     {
-        return (questionsToken as JArray ?? [])
-            .Values<string>()
-            .Where(question => !string.IsNullOrWhiteSpace(question))
-            .ToList()!;
+        var questions = new List<string>();
+        foreach (var questionToken in questionsToken as JArray ?? [])
+        {
+            var question = questionToken.Type switch
+            {
+                JTokenType.String => questionToken.Value<string>(),
+                JTokenType.Object => questionToken.Value<string>("question")
+                    ?? questionToken.Value<string>("text")
+                    ?? questionToken.Value<string>("title")
+                    ?? questionToken.Value<string>("description")
+                    ?? questionToken.Value<string>("desc"),
+                _ => null
+            };
+
+            if (!string.IsNullOrWhiteSpace(question))
+            {
+                questions.Add(question);
+            }
+        }
+
+        return questions;
     }
 
     private static int ParseEstimate(JToken? estimateToken)
@@ -71,7 +121,15 @@ public class StoryDecompositionService
 
         if (reasoningToken is JArray reasoningArray)
         {
-            return reasoningArray.Values<string>()
+            return reasoningArray
+                .Select(item => item.Type == JTokenType.String
+                    ? item.Value<string>()
+                    : item is JObject reasoningItem
+                        ? reasoningItem.Value<string>("reasoning")
+                            ?? reasoningItem.Value<string>("title")
+                            ?? reasoningItem.Value<string>("description")
+                            ?? reasoningItem.Value<string>("desc")
+                        : null)
                 .Where(value => !string.IsNullOrWhiteSpace(value))
                 .ToList()!;
         }
@@ -95,12 +153,22 @@ public class StoryDecompositionService
     private List<StoryDecomposer.Models.Task> ConvertToTasks(JToken? tasksArray)
     {
         var tasks = new List<StoryDecomposer.Models.Task>();
-        foreach (var taskJson in tasksArray as JArray ?? new JArray())
+        foreach (var taskToken in tasksArray as JArray ?? new JArray())
         {
+            var taskJson = taskToken as JObject
+                ?? (taskToken as JArray)?.OfType<JObject>().FirstOrDefault();
+
+            if (taskJson is null)
+            {
+                continue;
+            }
+
             tasks.Add(new StoryDecomposer.Models.Task
             {
                 Title = taskJson.Value<string>("title") ?? string.Empty,
-                Description = taskJson.Value<string>("description") ?? string.Empty,
+                Description = taskJson.Value<string>("description")
+                    ?? taskJson.Value<string>("desc")
+                    ?? string.Empty,
                 AreaOfChange = taskJson.Value<string>("areaOfChange") ?? string.Empty
             });
         }

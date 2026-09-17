@@ -19,7 +19,17 @@ public class StoryController : ControllerBase
     [HttpPost("decompose")]
     public async Task<IActionResult> DecomposeStory([FromBody] Story story)
     {
-        var decomposition = await _decompositionService.DecomposeStory(story);
-        return Ok(decomposition);
+        try
+        {
+            var decomposition = await _decompositionService.DecomposeStory(story);
+            return Ok(decomposition);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Problem(
+                detail: exception.Message,
+                statusCode: StatusCodes.Status502BadGateway,
+                title: "The configured LLM returned an invalid story analysis.");
+        }
     }
 }
